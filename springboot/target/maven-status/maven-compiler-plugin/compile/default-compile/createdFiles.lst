@@ -1,0 +1,8 @@
+com\example\demo\util\DataSourceUtil.class
+com\example\demo\DemoApplication.class
+com\example\demo\bean\Book.class
+com\example\demo\controller\MyController.class
+com\example\demo\dao\BookDao.class
+com\example\demo\dao\BookDao$1.class
+com\example\demo\adapter\MyWebMvcConfigurerAdapter.class
+com\example\demo\controller\BookController.class
