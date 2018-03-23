@@ -1,0 +1,5 @@
+<html>
+<body>
+<h2>welcome $rc.contextPath ,today is $date</h2>
+</body>
+</html>

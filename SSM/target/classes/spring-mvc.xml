@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:p="http://www.springframework.org/schema/p" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xsi:schemaLocation="
+    http://www.springframework.org/schema/beans
+    http://www.springframework.org/schema/beans/spring-beans-3.2.xsd
+    http://www.springframework.org/schema/context
+    http://www.springframework.org/schema/context/spring-context-3.2.xsd
+    http://www.springframework.org/schema/mvc
+    http://www.springframework.org/schema/mvc/spring-mvc-3.2.xsd">
+    
+    <!-- 拦截器 -->
+	<mvc:interceptors>
+		<bean class="com.ssm.interceptor.MyInterceptor"></bean>
+		<mvc:interceptor>
+			<!--拦截的是controller类requestmapping的地址，不能拦截jsp页面 -->
+			<mvc:mapping path="/test/t2"/>
+			
+			<bean class="com.ssm.interceptor.WelcomeInterceptor">
+			</bean>
+		</mvc:interceptor>
+	</mvc:interceptors>
+
+	<mvc:annotation-driven />
+
+	<context:component-scan base-package="com.ssm">
+	</context:component-scan>
+
+	<!-- 内容协商管理器 -->
+	<!--1、首先检查路径扩展名（如my.pdf）；2、其次检查Parameter（如my?format=pdf）；3、检查Accept Header -->
+	<bean id="contentNegotiationManager"
+		class="org.springframework.web.accept.ContentNegotiationManagerFactoryBean">
+		<!-- 扩展名至mimeType的映射,即 /user.json => application/json -->
+		<property name="favorPathExtension" value="true" />
+		<!-- 用于开启 /userinfo/123?format=json 的支持 -->
+		<property name="favorParameter" value="true" />
+		<property name="parameterName" value="format" />
+		<!-- 是否忽略Accept Header -->
+		<property name="ignoreAcceptHeader" value="false" />
+
+		<property name="mediaTypes"> <!--扩展名到MIME的映射；favorPathExtension, favorParameter是true时起作用 -->
+			<value>
+				json=application/json
+				xml=application/xml
+				html=text/html
+			</value>
+		</property>
+		<!-- 默认的content type -->
+		<property name="defaultContentType" value="text/html" />
+	</bean>
+
+
+	<!-- 当在web.xml 中 DispatcherServlet使用 <url-pattern>/</url-pattern> 映射时，能映射静态资源 -->
+	<mvc:default-servlet-handler />
+	
+	<!-- 视图渲染 jsp/freemaker/velocity -->
+	<bean id="jspResolver"
+		class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+		<property name="order" value="1"></property>
+		<!-- 制定页面存放的路径 -->
+		<property name="prefix" value="/WEB-INF/pages/"></property>
+		
+		<!-- 文件jsp的后缀-->
+		<property name="suffix" value=".jsp"></property> 
+	</bean>
+	
+	<!-- 配置视图的显示 -->  
+    <bean id="VMResolver"
+    	class="org.springframework.web.servlet.view.InternalResourceViewResolver">  
+    	<property name="order" value="0"></property>
+    	<property name="viewClass" value ="com.ssm.springmvcpro.VMProperties"></property>
+        <property name="cache" value="false" />  
+        <property name="prefix" value="/WEB-INF/vm/" /><!-- 视图文件的前缀，即存放的路径 -->  
+        <property name="suffix" value=".vm" /><!-- 视图文件的后缀名 -->  
+        <property name="contentType" value="text/html;charset=UTF-8" />  
+    </bean>
+
+	
+	
+	
+</beans>
