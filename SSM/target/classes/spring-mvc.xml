@@ -3,22 +3,26 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
 	xmlns:p="http://www.springframework.org/schema/p" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xmlns:context="http://www.springframework.org/schema/context"
-	xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:tx="https://www.springframework.org/schema/tx"
+	xmlns:aop="https://www.springframework.org/schema/aop" xmlns:websocket="http://www.springframework.org/schema/websocket"
 	xsi:schemaLocation="
     http://www.springframework.org/schema/beans
-    http://www.springframework.org/schema/beans/spring-beans-3.2.xsd
+    http://www.springframework.org/schema/beans/spring-beans.xsd
     http://www.springframework.org/schema/context
     http://www.springframework.org/schema/context/spring-context-3.2.xsd
     http://www.springframework.org/schema/mvc
-    http://www.springframework.org/schema/mvc/spring-mvc-3.2.xsd">
-    
-    <!-- 拦截器 -->
+    http://www.springframework.org/schema/mvc/spring-mvc-3.2.xsd
+    http://www.springframework.org/schema/websocket
+    http://www.springframework.org/schema/websocket/spring-websocket.xsd
+     ">
+
+	<!-- 拦截器 -->
 	<mvc:interceptors>
 		<bean class="com.ssm.interceptor.MyInterceptor"></bean>
 		<mvc:interceptor>
 			<!--拦截的是controller类requestmapping的地址，不能拦截jsp页面 -->
-			<mvc:mapping path="/test/t2"/>
-			
+			<mvc:mapping path="/test/t2" />
+
 			<bean class="com.ssm.interceptor.WelcomeInterceptor">
 			</bean>
 		</mvc:interceptor>
@@ -55,30 +59,39 @@
 
 	<!-- 当在web.xml 中 DispatcherServlet使用 <url-pattern>/</url-pattern> 映射时，能映射静态资源 -->
 	<mvc:default-servlet-handler />
-	
+
 	<!-- 视图渲染 jsp/freemaker/velocity -->
 	<bean id="jspResolver"
 		class="org.springframework.web.servlet.view.InternalResourceViewResolver">
 		<property name="order" value="1"></property>
 		<!-- 制定页面存放的路径 -->
 		<property name="prefix" value="/WEB-INF/pages/"></property>
-		
-		<!-- 文件jsp的后缀-->
-		<property name="suffix" value=".jsp"></property> 
-	</bean>
-	
-	<!-- 配置视图的显示 -->  
-    <bean id="VMResolver"
-    	class="org.springframework.web.servlet.view.InternalResourceViewResolver">  
-    	<property name="order" value="0"></property>
-    	<property name="viewClass" value ="com.ssm.springmvcpro.VMProperties"></property>
-        <property name="cache" value="false" />  
-        <property name="prefix" value="/WEB-INF/vm/" /><!-- 视图文件的前缀，即存放的路径 -->  
-        <property name="suffix" value=".vm" /><!-- 视图文件的后缀名 -->  
-        <property name="contentType" value="text/html;charset=UTF-8" />  
-    </bean>
 
-	
-	
-	
+		<!-- 文件jsp的后缀 -->
+		<property name="suffix" value=".jsp"></property>
+	</bean>
+
+	<!-- 配置视图的显示 -->
+	<bean id="VMResolver"
+		class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+		<property name="order" value="0"></property>
+		<property name="viewClass" value="com.ssm.springmvcpro.VMProperties"></property>
+		<property name="cache" value="false" />
+		<property name="prefix" value="/WEB-INF/vm/" /><!-- 视图文件的前缀，即存放的路径 -->
+		<property name="suffix" value=".vm" /><!-- 视图文件的后缀名 -->
+		<property name="contentType" value="text/html;charset=UTF-8" />
+	</bean>
+
+	<mvc:default-servlet-handler />
+	<mvc:resources location="/" mapping="/**" />
+
+	<bean id="myHandler" class="com.ssm.websocket.WebsocketEndPoint"></bean>
+
+	<websocket:handlers>
+		<websocket:mapping path="/myHandler" handler="myHandler" />
+		<websocket:handshake-interceptors>
+			<bean class="com.ssm.websocket.HandshakeInterceptor" />
+		</websocket:handshake-interceptors>
+	</websocket:handlers>
+
 </beans>

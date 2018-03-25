@@ -1,0 +1,3 @@
+<toolbox scope="request">  
+     　　   <tool key="link" class="org.apache.velocity.tools.view.LinkTool"/>
+</toolbox>
