@@ -1,0 +1,12 @@
+<!--?xml version="1.0" encoding="UTF-8"?-->
+ 
+<!--命名空间应该是对应接口的包名+接口名 -->
+<mapper namespace="com.ss.dao.BookDAO">
+
+    <!--id应该是接口中的方法，结果类型如没有配置别名则应该使用全名称 -->
+    <!--获得所有图书 -->
+    <select id="getAllBooks" resulttype="Book">
+        select id,title,price,publishDate from books
+    </select>
+   
+</mapper>
